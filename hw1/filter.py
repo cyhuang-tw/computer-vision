@@ -3,9 +3,6 @@ import cv2
 
 
 def JointBilateralFilter(ss,sr,guid,target):
-
-#sr is normalized (0~255 -> 0~1)
-
 	r = 3*ss
 	w = 2*r + 1 #window size
 	sr = sr*255
@@ -22,8 +19,8 @@ def JointBilateralFilter(ss,sr,guid,target):
 	window_s = window_s.reshape((w,w,1))
 
 	#padding for target and guidance pic
-	img = cv2.copyMakeBorder(target,r,r,r,r,cv2.BORDER_REFLECT)
-	guid_p = cv2.copyMakeBorder(guid,r,r,r,r,cv2.BORDER_REFLECT)
+	img = cv2.copyMakeBorder(target,r,r,r,r,cv2.BORDER_REFLECT).astype('int')
+	guid_p = cv2.copyMakeBorder(guid,r,r,r,r,cv2.BORDER_REFLECT).astype('int')
 
 	#filtering
 	#for BW pics
