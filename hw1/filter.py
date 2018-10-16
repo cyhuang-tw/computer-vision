@@ -19,7 +19,7 @@ def JointBilateralFilter(ss,sr,guid,target):
 	window_s = window_s.reshape((w,w,1))
 
 	#padding for target and guidance pic
-	img = cv2.copyMakeBorder(target,r,r,r,r,cv2.BORDER_REFLECT).astype('int')
+	img_p = cv2.copyMakeBorder(target,r,r,r,r,cv2.BORDER_REFLECT).astype('int')
 	guid_p = cv2.copyMakeBorder(guid,r,r,r,r,cv2.BORDER_REFLECT).astype('int')
 
 	#filtering
@@ -28,24 +28,24 @@ def JointBilateralFilter(ss,sr,guid,target):
 		for i in range(guid.shape[0]):
 			for j in range(guid.shape[1]):
 				#create the window for color part
-				cur_window = img[i:(i+w),j:(j+w)]
+				cur_window = img_p[i:(i+w),j:(j+w)]
 				window_tmp = guid_p[i:(i+w),j:(j+w)]
 				window_r = window_tmp - window_tmp[r][r]
 				window_r = np.exp((-1)*(window_r*window_r)/(2*(sr**2)))
 				window_r = window_r.reshape((w,w,1))
 
-				result[i][j] = (np.sum(window_r*window_s*cur_window,axis=(0,1)))/(np.sum(window_s*window_r))
+				result[i][j] = (np.sum(window_r*window_s*cur_window,axis=(0,1)))/(np.sum(window_r*window_s))
 	else:
 		#for color pics
 		for i in range(guid.shape[0]):
 			for j in range(guid.shape[1]):
 				#create the window for color part
-				cur_window = img[i:(i+w),j:(j+w)]
+				cur_window = img_p[i:(i+w),j:(j+w)]
 				window_tmp = guid_p[i:(i+w),j:(j+w)]
 				window_r = window_tmp - window_tmp[r][r]
 				window_r = np.exp((-1)*(window_r*window_r)/(2*(sr**2)))
 				window_r = (window_r[:,:,0]*window_r[:,:,1]*window_r[:,:,2]).reshape((w,w,1))
 
-				result[i][j] = (np.sum(window_r*window_s*cur_window,axis=(0,1)))/(np.sum(window_s*window_r))
+				result[i][j] = (np.sum(window_r*window_s*cur_window,axis=(0,1)))/(np.sum(window_r*window_s))
 				
 	return result

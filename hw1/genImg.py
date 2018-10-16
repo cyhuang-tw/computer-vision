@@ -1,18 +1,11 @@
 import numpy as np
 import cv2
 
-i = 0.114
-j = 0.587
-k = 0.299
+def genImg(img,bgr,fileName):
+	gray = np.zeros(img.shape)
+	gray[:,:,0] = bgr[0]
+	gray[:,:,1] = bgr[1]
+	gray[:,:,2] = bgr[2]
 
-img = cv2.imread('0c.png')
-
-gray = np.ones(img.shape)
-
-gray[:,:,0] = i
-gray[:,:,1] = j
-gray[:,:,2] = k
-
-guid = (np.sum(gray*img,axis = 2))
-
-cv2.imwrite('0c_y.png',guid)
+	result = np.sum(gray*img,axis = 2).astype('uint8')
+	cv2.imwrite(fileName,result)	
